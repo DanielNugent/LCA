@@ -1,24 +1,28 @@
 class Node {
   constructor(key) {
-    this.left = null;
-    this.right = null;
     this.key = key;
+    this.successor = []
+    this.predecessor = []
   }
 }
 
-const LCA = (root, p, q) => {
-  const LCA_inner = (root, p, q) => {
-    if (root == null) return root;
-    if (root.key == p || root.key == q) return root;
-    var left = LCA_inner(root.left, p, q);
-    var right = LCA_inner(root.right, p, q);
-    if (left != null && right != null) return root;
-    if (left == null && right == null) return null;
-    return left != null ? left : right;
-  };
-  return LCA_inner(root, p, q).key;
+const LCA = (root, x, y) => {
+  if(!x || !y) return null;
+  if(!x.key || !y.key || root == null) return null;
+  if(root.key === x.key || root.key === y.key) return root.key;
+  if(x.key === y.key) return x.key;
+  order = [];
+  x.predecessor.forEach(predX => {
+    y.predecessor.forEach(predY => {
+      if(predX.key === predY.key) order.push(predX.key);
+    })
+  })
+  if(order.length === 0){
+    if(x.key > y.key) order.push(LCA(root, x.predecessor[0], y));
+    else order.push(LCA(root, x, y.predecessor[0]));
+  }
+  return Math.max(...order); 
 };
-
 module.exports.LCA = LCA;
 module.exports.Node = Node;
 

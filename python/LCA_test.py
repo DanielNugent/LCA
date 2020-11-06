@@ -3,18 +3,26 @@ import LowestCommonAncestor
 
 Node = LowestCommonAncestor.Node
 LCA = LowestCommonAncestor.LCA
+
 root = Node(1)
-root.left = Node(2)
-root.right = Node(3)
-root.left.left = Node(4)
-root.left.right = Node(5)
-root.right.left = Node(6)
-root.right.right = Node(7)
+r2 = Node(2)
+r3 = Node(3)
+r4 = Node(4)
+r5 = Node(5)
+root.successor = [r2,r3]
+r2.successor = [r4]
+r2.predecessor = [root]
+r3.successor = [r4]
+r3.predecessor = [root]
+r4.successor = [r5]
+r4.predecessor = [r2,r3]
+r5.predecessor = [r4]
 
 
 def test_answer():
-    assert LCA(root, 4, 5) == 2
-    assert LCA(root, 4, 6) == 1
-    assert LCA(root, 3, 4) == 1
-    assert LCA(root, 2, 4) == 2
+    assert LCA(root, r2, r4) == 2
+    assert LCA(root, r2, r3) == 1
+    
+def test_null():
+    assert LCA(root, None, 2) is None
     
