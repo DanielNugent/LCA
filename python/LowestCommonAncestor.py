@@ -1,32 +1,33 @@
 class Node:
     def __init__(self, key):
-        self.left = None
-        self.right = None
         self.key = key
+        self.predecessor = []
+        self.successor = []
 
-
-def find_path(root, path, k):
-    if root is None:
-        return False
-
-    path.append(root.key)
-    if(root.key == k):
-        return True
-    if((root.left != None and find_path(root.left, path, k)) or (root.right != None and find_path(root.right, path, k))):
-        return True
-    path.pop()
-    return False
 
 
 def LCA(root, x, y):
-    p1 = []
-    p2 = []
-    if(not find_path(root, p1, x) or not find_path(root, p2, y)):
-        return -1
-    k = 0
-    while(k < len(p1) and k < len(p2)):
-        if(p1[k] != p2[k]):
-            break
-        k = k + 1
-    return p1[k-1]
+    if(not hasattr(x, 'key')): 
+        return None
+    if(root is None):
+        return None
+    if(root.key == x.key or root.key == y.key):
+        return root.key
+    if(x.key == y.key):
+        return x.key
+    order = []
+
+
+    for i in range(len(x.predecessor)):
+        for j in range(len(y.predecessor)):
+            if(x.predecessor[i].key == y.predecessor[j].key):
+                order.append(x.predecessor[i].key)
+
+    if(order == []):
+        if(x.key > y.key):
+            order.append(LCA(root,x.predecessor[0],y))
+        else:
+            order.append(LCA(root,x,y.predecessor[0]))
+
+    return max(order)
 
